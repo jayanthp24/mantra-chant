@@ -121,11 +121,20 @@ export default function App() {
         setRunning(false);
     };
 
-    const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen?.();
-        } else {
-            document.exitFullscreen?.();
+    const toggleFullscreen = async () => {
+        try {
+            const el = document.documentElement;
+
+            if (!document.fullscreenElement) {
+                await el.requestFullscreen();
+                console.log("Entered fullscreen");
+            } else {
+                await document.exitFullscreen();
+                console.log("Exited fullscreen");
+            }
+        } catch (err) {
+            console.error("Fullscreen failed:", err);
+            alert(err.message);
         }
     };
 
@@ -204,8 +213,8 @@ export default function App() {
                                 {image ? "Change photo" : "Upload photo"}
                             </button>
                             <button
-                                onClick={handleControlClick(() => {
-                                    toggleFullscreen();
+                                onClick={handleControlClick(async () => {
+                                    await toggleFullscreen();
                                     setMenuOpen(false);
                                 })}
                                 className="w-full text-left px-4 py-3 text-sm text-slate-200 hover:bg-white/[0.06] transition-colors"
