@@ -98,8 +98,18 @@ export default function App() {
     const handleImageUpload = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
         const reader = new FileReader();
-        reader.onload = () => setImage(reader.result);
+
+        reader.onload = () => {
+            setImage(reader.result);
+            e.target.value = "";
+        };
+
+        reader.onerror = () => {
+            console.error("Unable to read file");
+        };
+
         reader.readAsDataURL(file);
     };
 
